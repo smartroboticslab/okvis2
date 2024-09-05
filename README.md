@@ -1,4 +1,4 @@
-README                        {#mainpage}
+README
 ======
 
 Welcome to OKVIS2: Open Keyframe-based Visual-Inertial SLAM.
