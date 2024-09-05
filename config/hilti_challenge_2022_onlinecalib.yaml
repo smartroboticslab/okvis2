@@ -1,0 +1,129 @@
+%YAML:1.0
+cameras:
+     - {T_SC:
+        [0.00514900545402819, 0.00371074997793055, 0.999979858835885, 0.0510330993641566,
+         0.999951411870692, 0.00838699516828034, -0.00517998164648179, 0.0453219822529411,
+         -0.00840604786121489, 0.999957943438947, -0.00366738499566677, -0.013153372069208, 
+         0.0000000000000000000, 0.0000000000000000000, 0.0000000000000000000, 1.0000000000000000000],
+        image_dimension: [720, 540],
+        distortion_coefficients: [-0.03696737352869157, -0.008917880497032812, 0.008912969593422046, -0.0037685977496087313],
+        distortion_type: equidistant,
+        focal_length: [351.31400364193297, 351.4911744656785],
+        principal_point: [367.8522793375995, 253.84021449809963],
+        camera_type: gray, #gray, rgb, gray+depth, rgb+depth
+        slam_use: okvis}
+
+     - {T_SC:
+        [-0.00098515631156082, 0.00113951259764257, 0.999998865488397, 0.0504924328060373,
+         0.99999282441576, 0.00365907005446975, 0.000980980798999938, -0.0628257829389188,
+         -0.00365794806323386, 0.999992656331724, -0.00114310917693272, -0.0132577076552583, 
+         0.0000000000000000000, 0.0000000000000000000, 0.0000000000000000000, 1.0000000000000000000],
+        image_dimension: [720, 540],
+        distortion_coefficients: [-0.039086652082708805, -0.005525347047415151, 0.004398151558986798, -0.0019701263170917808],
+        distortion_type: equidistant,
+        focal_length: [352.6489794433894, 352.8586498571586],
+        principal_point: [347.8170010310082, 270.5806692485468],
+        camera_type: gray, #gray, rgb, gray+depth, rgb+depth
+        slam_use: okvis}
+        
+     - {T_SC:
+        [0.999992712035391, 0.00369110888225177, 0.000975495424100197, 0.00706275349620249,
+         0.0036925922643014, -0.999992022213384, -0.00152324389251462, -0.00802478256958059,
+         0.000969865182744362, 0.00152683489802394, -0.999998364067023, -0.0342390514126395, 
+         0.0000000000000000000, 0.0000000000000000000, 0.0000000000000000000, 1.0000000000000000000],
+        image_dimension: [720, 540],
+        distortion_coefficients: [-0.041202246303621064, -0.0012607385825244833, 0.0006712169937177444, -0.0006234254968089226],
+        distortion_type: equidistant,
+        focal_length: [350.70040966794545, 350.8792449525716],
+        principal_point: [375.2977403521422, 268.5927747079796],
+        camera_type: gray, #gray, rgb, gray+depth, rgb+depth
+        slam_use: okvis}
+       
+     - {T_SC:
+        [-0.999846675958572, 0.0132943442424223, 0.0113967094267484, -0.00286425987962253,
+         0.0113556663615205, -0.00315867187666297, 0.999930533403927, 0.0573411492323982,
+         0.0133294191951335, 0.999906637243268, 0.00300722143861309, -0.0110838770909149, 
+         0.0000000000000000000, 0.0000000000000000000, 0.0000000000000000000, 1.0000000000000000000],
+        image_dimension: [720, 540],
+        distortion_coefficients: [-0.03890973498616883, -0.002604676547864069, 0.0004634700730293949, -0.00036698216675371063],
+        distortion_type: equidistant,
+        focal_length: [352.9514843860555, 353.32837903547403],
+        principal_point: [363.93345228274336, 266.14511705007413],
+        camera_type: gray, #gray, rgb, gray+depth, rgb+depth
+        slam_use: okvis}
+       
+     - {T_SC:
+        [0.999976054878614, 0.00484028194374633, 0.00494584068774979, -0.00653982502212393,
+         0.00496047470835266, -0.00301606124991483, -0.999983148390614, -0.0748062492970285,
+         -0.00482528341875912, 0.999983737390385, -0.0030399991261254, -0.0165744076775233,
+         0.0000000000000000000, 0.0000000000000000000, 0.0000000000000000000, 1.0000000000000000000],
+        image_dimension: [720, 540],
+        distortion_coefficients: [-0.03842764034005408, -0.005841411460411122, 0.003451041303088915, -0.0011463543672005018],
+        distortion_type: equidistant,
+        focal_length: [351.5132148653381, 351.7557554938886],
+        principal_point: [342.8425988673232, 259.91793254535776],
+        camera_type: gray, #gray, rgb, gray+depth, rgb+depth
+        slam_use: okvis}
+
+# additional camera parameters
+camera_parameters:
+    timestamp_tolerance: 0.005 # [s] stereo frame out-of-sync tolerance
+    image_delay: 0.0018 # [s] timestamp_camera_correct = timestamp_camera - image_delay
+    sync_cameras: [0,1,2,3,4] # the cameras that will be synchronised
+    online_calibration: # some parameters to set the online 
+        do_extrinsics: false # Do we online-calibrate extrinsics?
+        do_extrinsics_final_ba: false # Do we calibrate extrinsics in final BA?
+        sigma_r: 0.001 # T_SCi position prior stdev [m]
+        sigma_alpha: 0.005 # T_SCi orientation prior stdev [rad]
+
+imu_parameters:
+    use: true
+    a_max: 176.0 # acceleration saturation [m/s^2]
+    g_max: 7.8 # gyro saturation [rad/s]
+    sigma_g_c: 20.0e-4 # gyro noise density [rad/s/sqrt(Hz)]
+    sigma_a_c: 20.0e-3 # accelerometer noise density [m/s^2/sqrt(Hz)]
+    sigma_bg: 0.01 # gyro bias prior [rad/s]
+    sigma_ba: 0.1 # accelerometer bias prior [m/s^2]
+    sigma_gw_c: 20.0e-5 # gyro drift noise density [rad/s^s/sqrt(Hz)]
+    sigma_aw_c: 20.0e-3 # accelerometer drift noise density [m/s^2/sqrt(Hz)]
+    g: 9.81007 # Earth's acceleration due to gravity [m/s^2]
+    g0: [ 0.0, 0.0, 0.0 ] # initial gyro bias [rad/s]
+    a0: [ 0.1, 0.04, 0.15 ] # initial accelerometer bias [m/s^2]
+    # tranform Body-Sensor (IMU)
+    T_BS:
+        [1.0000, 0.0000, 0.0000, 0.0000,
+         0.0000, 1.0000, 0.0000, 0.0000,
+         0.0000, 0.0000, 1.0000, 0.0000,
+         0.0000, 0.0000, 0.0000, 1.0000]
+
+# frontend: detection etc. 
+frontend_parameters:
+    detection_threshold: 50.0 #42.0 # detection threshold. By default the uniformity radius in pixels
+    absolute_threshold: 20.0 # absolute Harris corner threshold (noise floor)
+    matching_threshold: 60.0 # BRISK descriptor matching threshold
+    octaves: 0 # number of octaves for detection. 0 means single-scale at highest resolution
+    max_num_keypoints: 700 # restrict to a maximum of this many keypoints per image (strongest ones)
+    keyframe_overlap: 0.59 # minimum field-of-view overlap
+    use_cnn: false # use the CNN (if available) to filter out dynamic content / sky
+    parallelise_detection: true # Run parallel detect & describe.
+    num_matching_threads: 1 # Parallelise matching with this number of threads.
+
+# estimator parameters
+estimator_parameters:
+    num_keyframes: 5 # number of keyframes in optimisation window
+    num_loop_closure_frames: 5 # number of loop closure frames in optimisation window
+    num_imu_frames: 3 # number of frames linked by most recent nonlinear IMU error terms
+    do_loop_closures: true # whether to do VI-SLAM or VIO
+    do_final_ba: true # Whether to run a full final BA
+    enforce_realtime: false # whether to limit the time budget for optimisation 
+    realtime_min_iterations: 3 # minimum number of iterations always performed
+    realtime_max_iterations: 10 # never do more than these, even if not converged
+    realtime_time_limit: 0.035 # time budget for realtime optimisation [s]
+    realtime_num_threads: 4 # number of threads for the realtime optimisation
+    full_graph_iterations: 15 # don't do more than these for the full (background) optimisation
+    full_graph_num_threads: 2 # number of threads for the full (background) optimisation
+
+# some options for how and what to output
+output_parameters:
+    display_matches: false  # displays debug video and matches. May be slow.
+    display_overhead: false # debug overhead image. Is slow.

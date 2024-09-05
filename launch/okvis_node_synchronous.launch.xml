@@ -1,0 +1,21 @@
+<launch>
+    <arg name="rpg" default="false" />
+    <arg name="rgb" default="false" />
+    <arg name="config_filename" default="" />
+    <arg name="path" default=""/>
+    <arg name="rviz" default="true"/>
+    <arg name="mesh" default="realsense.dae"/>
+    <!-- Add mesh for RVIZ visualization. In case you are using a different mesh, you will have to adjust
+         the IMU-to-body extrinsics (T_BS) in the okvis2 config file -->
+
+    <node pkg="okvis" exec="okvis_node_synchronous" name="okvis" namespace="okvis">
+        <param name="rpg" value="$(var rpg)"/>
+        <param name="rgb" value="$(var rgb)"/>
+        <param name="config_filename" value="$(var config_filename)"/>
+        <param name="path" value="$(var path)"/>
+        <param name="mesh_file" value="file://$(find-pkg-share okvis)/resources/meshes/$(var mesh)"/>
+    </node>
+
+    <node pkg="rviz2" exec="rviz2" name="rviz2" namespace="okvis" args="-d $(find-pkg-share okvis)/config/rviz2/rviz2_config.rviz" if="$(var rviz)"/>
+        
+</launch>

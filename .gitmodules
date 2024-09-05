@@ -1,0 +1,15 @@
+[submodule "external/ceres-solver"]
+	path = external/ceres-solver
+	url = https://ceres-solver.googlesource.com/ceres-solver
+[submodule "external/brisk"]
+	path = external/brisk
+	url = ../brisk.git
+[submodule "external/DBoW2"]
+	path = external/DBoW2
+	url = https://github.com/dorian3d/DBoW2.git
+[submodule "external/opengv"]
+	path = external/opengv
+	url = https://github.com/laurentkneip/opengv
+[submodule "external/googletest"]
+	path = external/googletest
+	url = https://github.com/google/googletest.git

@@ -1,0 +1,107 @@
+%YAML:1.0
+cameras:
+     - {T_SC:
+        [1.0, 0.0, 0.0, -0.0302200001,
+         0.0, 1.0, 0.0,  0.0074000000,
+         0.0, 0.0, 1.0,  0.0160200000,
+          0.0, 0.0, 0.0, 1.0000000000],
+        image_dimension: [640, 480],
+        distortion_coefficients: [0.0, 0.0, 0.0, 0.0],
+        distortion_type: radialtangential,
+        focal_length: [390.598938, 390.598938],
+        principal_point: [320.581665, 237.712845],
+        camera_type: gray+depth, #gray, rgb, gray+depth, rgb+depth
+        slam_use: okvis} #none, okvis, okvis-depth, okvis-virtual
+
+     - {T_SC:
+        [1.0, 0.0, 0.0,  0.0646901205,
+         0.0, 1.0, 0.0,  0.0074000000,
+         0.0, 0.0, 1.0,  0.0160200000,
+          0.0, 0.0, 0.0, 1.0000000000],
+        image_dimension: [640, 480],
+        distortion_coefficients: [0.0, 0.0, 0.0, 0.0],
+        distortion_type: radialtangential,
+        focal_length: [390.598938, 390.598938],
+        principal_point: [320.581665, 237.712845],
+        camera_type: gray, #gray, rgb, gray+depth, rgb+depth
+        slam_use: okvis} #none, okvis, okvis-depth, okvis-virtual
+
+     - {T_SC:
+        [1.0, 0.0, 0.0,  0.0000000000,
+         0.0, 1.0, 0.0,  0.0074000000,
+         0.0, 0.0, 1.0,  0.0160200000,
+         0.0, 0.0, 0.0, 1.0000000000],
+        image_dimension: [640, 480],
+        distortion_coefficients: [0.0, 0.0, 0.0, 0.0],
+        distortion_type: radialtangential,
+        focal_length: [380.522, 380.166],
+        principal_point: [324.327, 245.278],
+        camera_type: rgb, #gray, rgb, gray+depth, rgb+depth
+        baseline: [0.0,0.0,0.11], # optional: t_S_SC to virtual camera, if desired.
+        sigma_pixels: = 0.8, # optional: pixel uncertainty of stereo depth [pix]
+        sigma_depth: = 0.01, # optional: additional to pix. uncertainty: the depth uncertainty [m]
+        slam_use: none} #none, okvis, okvis-depth, okvis-virtualal
+
+
+# additional camera parameters
+camera_parameters:
+    timestamp_tolerance: 0.005 # [s] stereo frame out-of-sync tolerance
+    sync_cameras: [0, 1] # the cameras that will be synchronised
+    image_delay: 0.0 # [s] timestamp_camera_correct = timestamp_camera - image_delay -0.00780146
+    online_calibration: # some parameters to set the online 
+        do_extrinsics: false # Do we online-calibrate extrinsics?
+        do_extrinsics_final_ba: true
+        sigma_r: 0.001 # T_SCi position prior stdev [m] 
+        sigma_alpha: 0.01 # T_SCi orientation prior stdev [rad]
+
+# the IMU sensor model
+imu_parameters:
+    use: true # enable IMU
+    a_max: 160.0 # acceleration saturation [m/s^2]
+    g_max: 10.0 # gyro saturation [rad/s]
+    sigma_g_c: 0.00278 # gyro noise density [rad/s/sqrt(Hz)]
+    sigma_bg: 0.03 # gyro bias prior [rad/s]
+    sigma_a_c: 0.0252 # accelerometer noise density [m/s^2/sqrt(Hz)]
+    sigma_ba: 0.01 # accelerometer bias prior [m/s^2]
+    sigma_gw_c: 0.0008 # gyro drift noise density [rad/s^s/sqrt(Hz)]
+    sigma_aw_c: 0.04 # accelerometer drift noise density [m/s^2/sqrt(Hz)]
+    a0: [0.237891675418656,  0.167477259386443,   0.242558311983621] # Initial accelerometer bias [m/s^2]
+    g0: [0.0, 0.0, 0.0] # Initial gyro bias [rad/s]
+    g: 9.81007 # Earth's acceleration due to gravity [m/s^2]
+    T_BS: 
+        [ 1.0, 0.0, 0.0, 0.0,
+          0.0, 1.0, 0.0, 0.0,
+          0.0, 0.0, 1.0, 0.0,
+          0.0, 0.0, 0.0, 1.0 ]
+
+# frontend: detection etc. 
+frontend_parameters:
+    detection_threshold: 30.0 # detection threshold. By default the uniformity radius in pixels
+    absolute_threshold: 5.0 # absolute Harris corner threshold (noise floor)
+    matching_threshold: 60.0 # BRISK descriptor matching threshold
+    octaves: 0 # number of octaves for detection. 0 means single-scale at highest resolution
+    max_num_keypoints: 2500 # restrict to a maximum of this many keypoints per image (strongest ones) 400
+    keyframe_overlap: 0.55 # minimum field-of-view overlap 0.55
+    use_cnn: false # whether to use the segmentation CNN
+    parallelise_detection: true
+    num_matching_threads: 3
+
+# estimator parameters
+estimator_parameters:
+    num_keyframes: 5 # number of keyframes in optimisation window
+    num_loop_closure_frames: 5 # number of loop closure frames in optimisation window
+    num_imu_frames: 3 # number of frames linked by most recent nonlinear IMU error terms
+    do_loop_closures: true # whether to do VI-SLAM or VIO
+    do_final_ba: false # Whether to run a full final BA
+    enforce_realtime: false # whether to limit the time budget for optimisation
+    realtime_min_iterations: 3 # minimum number of iterations always performed
+    realtime_max_iterations: 10 # never do more than these, even if not converged
+    realtime_time_limit: 0.03 # time budget for realtime optimisation [s]
+    realtime_num_threads: 2 # number of threads for the realtime optimisation
+    full_graph_iterations: 15 # don't do more than these for the full (background) optimisation
+    full_graph_num_threads: 1 # number of threads for the full (background) optimisation
+
+# some options for how and what to output
+output_parameters:
+    display_matches: true  # displays debug video and matches. May be slow.
+    display_overhead: false # debug overhead image. Is slow.

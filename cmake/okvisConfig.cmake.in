@@ -1,0 +1,38 @@
+# CMake config file for the OKVIS package.
+# It defines the following variables:
+#   OKVIS_LIBRARIES - libraries to link against
+set(OKVIS_VERSION @CMAKE_PROJECT_VERSION@)
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+find_dependency(Boost)
+find_dependency(Ceres)
+find_dependency(DBoW2)
+find_dependency(Eigen3)
+find_dependency(Glog)
+find_dependency(OpenCV)
+find_dependency(brisk)
+if(@HAVE_LIBREALSENSE@)
+  find_dependency(realsense2)
+endif()
+if(@USE_NN@)
+  find_dependency(Torch)
+endif()
+
+get_filename_component(DIRNAME "${CMAKE_CURRENT_LIST_FILE}" PATH)
+include("${DIRNAME}/okvisTargets.cmake")
+
+set(OKVIS_LIBRARIES
+  ${OKVIS_LIBRARIES}
+  okvis::Ceres
+  okvis::Common
+  okvis::CV
+  okvis::Frontend
+  okvis::Kinematics
+  okvis::Multisensor_processing
+  okvis::Time
+  okvis::Timing
+  okvis::Util
+)
+
+check_required_components(okvis)

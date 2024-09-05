@@ -1,0 +1,6 @@
+<launch>
+    <arg name="config_filename" default="" />
+    <node pkg="okvis" exec="okvis_node_realsense_publisher" name="okvis" namespace="okvis">
+        <param name="config_filename" value="$(var config_filename)"/>
+    </node>
+</launch>
