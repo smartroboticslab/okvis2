@@ -158,7 +158,7 @@ You will need to install the following dependencies,
 
 Clone the OKVIS2 repository:
 
-    git clone --recurse-submodules git@bitbucket.org:smartroboticslab/okvis2.git
+    git clone --recurse-submodules git@github.com:smartroboticslab/okvis2.git
 
 If you forgot the `--recurse-submodules` flag when cloning run the following command in the
 repository root:
@@ -252,7 +252,7 @@ Create a workspace e.g.
 
 Now you can clone the repo
 
-    git clone --recurse-submodules git@bitbucket.org:smartroboticslab/okvis2.git
+    git clone --recurse-submodules git@github.com:smartroboticslab/okvis2.git
 
 You may want to run rosdep to make sure all dependencies are installed.
 
