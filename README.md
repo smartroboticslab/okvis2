@@ -225,15 +225,15 @@ query states for any time (at estimated, image timestamps, or otherwise).
 
 In terms of coordinate frames and notation,
 
-* `W` denotes the OKVIS World frame \f$\underrightarrow{\mathcal{F}}_W\f$ (z up)
-* `C_i` denotes the i-th camera frame \f$\underrightarrow{\mathcal{F}}_{C_i}\f$
-* `S` denotes the IMU sensor frame \f$\underrightarrow{\mathcal{F}}_S\f$
-* `B` denotes a (user-specified / robot) body frame \f$\underrightarrow{\mathcal{F}}_B\f$
+* `W` denotes the OKVIS World frame $`\underrightarrow{\mathcal{F}}_W`$ (z up)
+* `C_i` denotes the i-th camera frame $`\underrightarrow{\mathcal{F}}_{C_i}`$
+* `S` denotes the IMU sensor frame $`\underrightarrow{\mathcal{F}}_S`$
+* `B` denotes a (user-specified / robot) body frame $`\underrightarrow{\mathcal{F}}_B`$
 
-States contain the pose `T_WS` (\f$\boldsymbol{T}_{WS}\f$) as a position `r_WS`
-(\f$_W\mathbf{r}_{S}\f$) and quaternion `q_WS` (\f$\mathbf{q}_{WS}\f$), followed by the velocity
-in World frame `v_W` (\f$_{W}\mathbf{v}\f$) and gyro biases `b_g` (\f$\mathbf{b}_g\f$) as well as
-accelerometer biases `b_a` (\f$\mathbf{b}_a\f$).
+States contain the pose `T_WS` ($`\boldsymbol{T}_{WS}`$) as a position `r_WS`
+($`_W\mathbf{r}_{S}`$) and quaternion `q_WS` ($`\mathbf{q}_{WS}`$), followed by the velocity
+in World frame `v_W` ($`_{W}\mathbf{v}`$) and gyro biases `b_g` ($`\mathbf{b}_g`$) as well as
+accelerometer biases `b_a` ($`\mathbf{b}_a`$).
 
 **See the example applications to understand how to use the estimator, sensor, callbacks, etc!**
 
