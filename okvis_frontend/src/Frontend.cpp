@@ -38,7 +38,6 @@
  */
 
 #include <thread>
-#include <iomanip>
 #include <pthread.h>
 #include <sched.h>
 #include <sys/resource.h>
@@ -362,7 +361,7 @@ bool Frontend::verifyRecognisedPlace(const Estimator &estimator,
   // create a AbsolutePoseSac problem and RANSAC
   opengv::absolute_pose::LoopclosureNoncentralAbsoluteAdapter adapter(points,
                                                                       matches,
-                                                                      params.nCameraSystem,
+                                                                      framesInOut->cameraSystem(),
                                                                       framesInOut);
   typedef opengv::sac_problems::absolute_pose::FrameAbsolutePoseSacProblem<
     opengv::absolute_pose::LoopclosureNoncentralAbsoluteAdapter>
@@ -1206,7 +1205,7 @@ int Frontend::matchToMap(Estimator &estimator, const okvis::ViParameters& params
 
     // prepare landmarks as visible in this frame
     AlignedMap<LandmarkId, LandmarkToMatch> landmarksToMatch;
-    const kinematics::Transformation T_SC = *params.nCameraSystem.T_SC(im);
+    const kinematics::Transformation T_SC = *multiFrame->T_SC(im);
     const kinematics::Transformation T_WC1 = T_WS1 * T_SC;
     const kinematics::Transformation T_CW1 = T_WC1.inverse();
 
@@ -1276,7 +1275,7 @@ int Frontend::matchToMap(Estimator &estimator, const okvis::ViParameters& params
 
         // remove some descriptors that are unlikely to match
         const kinematics::Transformation T_SC_old =
-            *params.nCameraSystem.T_SC(kid.cameraIndex);
+            *multiFrame->T_SC(kid.cameraIndex);
         const kinematics::Transformation T_WS_old =
             estimator.pose(StateId(kid.frameId));
         const kinematics::Transformation T_WC_old = T_WS_old * T_SC_old;
@@ -1408,7 +1407,8 @@ int Frontend::matchToMap(Estimator &estimator, const okvis::ViParameters& params
 
   // remove outliers
   const bool ransacRemoveOutliers = true;
-  runRansac3d2d(estimator, params.nCameraSystem, estimator.multiFrame(StateId(currentFrameId)),
+  MultiFramePtr multiFrame = estimator.multiFrame(StateId(currentFrameId));
+  runRansac3d2d(estimator, multiFrame->cameraSystem(), multiFrame,
                 ransacRemoveOutliers);
   T_WS1 = estimator.pose(StateId(currentFrameId));
 
@@ -1439,7 +1439,7 @@ int Frontend::matchToMap(Estimator &estimator, const okvis::ViParameters& params
 
     // prepare landmarks as visible in this frame
     AlignedMap<LandmarkId, LandmarkToMatch> landmarksToMatch;
-    const kinematics::Transformation T_SC = *params.nCameraSystem.T_SC(im);
+    const kinematics::Transformation T_SC = *multiFrame->T_SC(im);
     const kinematics::Transformation T_WC1 = T_WS1 * T_SC;
     const kinematics::Transformation T_CW1 = T_WC1.inverse();
 
@@ -1520,7 +1520,7 @@ void Frontend::matchToMapByThread(
     std::vector<LandmarkId>& lmIds, AlignedVector<Eigen::Vector4d>& hps_W,
     std::vector<size_t>& ctrs) const {
 
-  const kinematics::Transformation T_SC = *params.nCameraSystem.T_SC(im);
+  const kinematics::Transformation T_SC = *multiFrame->T_SC(im);
   const kinematics::Transformation T_WC1 = T_WS1 * T_SC;
   const kinematics::Transformation T_CW1 = T_WC1.inverse();
 
@@ -1599,7 +1599,7 @@ void Frontend::matchToMapByThreadUnitialised(
     std::vector<LandmarkId>& lmIds, AlignedVector<Eigen::Vector4d>& hps_W,
     std::vector<size_t>& ctrs) const {
 
-  const kinematics::Transformation T_SC = *params.nCameraSystem.T_SC(im);
+  const kinematics::Transformation T_SC = *multiFrame->T_SC(im);
   const kinematics::Transformation T_WC1 = T_WS1 * T_SC;
   const kinematics::Transformation T_CW1 = T_WC1.inverse();
 
@@ -1770,9 +1770,10 @@ int Frontend::matchMotionStereo(Estimator& estimator, const ViParameters &params
   for (auto olderFrameId : matchFrameIds) {
     T_WS0 = estimator.pose(olderFrameId);
     for (size_t im = 0; im < params.nCameraSystem.numCameras(); ++im) {
-      const kinematics::Transformation T_SC = *params.nCameraSystem.T_SC(im);
-      const kinematics::Transformation T_WC0 = T_WS0 * T_SC;
-      const kinematics::Transformation T_WC1 = T_WS1 * T_SC;
+      const kinematics::Transformation T_SC0 = estimator.extrinsics(StateId(olderFrameId), im);
+      const kinematics::Transformation T_SC1 = estimator.extrinsics(StateId(currentFrameId), im);
+      const kinematics::Transformation T_WC0 = T_WS0 * T_SC0;
+      const kinematics::Transformation T_WC1 = T_WS1 * T_SC1;
       // match
       MultiFramePtr multiFrame0 = estimator.multiFrame(olderFrameId);
       MultiFramePtr multiFrame1 = estimator.multiFrame(StateId(currentFrameId));
@@ -1984,7 +1985,7 @@ void Frontend::matchStereo(Estimator &estimator, std::shared_ptr<okvis::MultiFra
   kinematics::Transformation T_WS = estimator.pose(StateId(mfId));
 
   for (size_t im0 = 0; im0 < camNumber; im0++) {
-    const kinematics::Transformation T_SC0 = *params.nCameraSystem.T_SC(im0);
+    const kinematics::Transformation T_SC0 = *multiFrame->T_SC(im0);
 
     for (size_t im1 = im0 + 1; im1 < camNumber; im1++) {
       // first, check the possibility for overlap
@@ -1996,7 +1997,7 @@ void Frontend::matchStereo(Estimator &estimator, std::shared_ptr<okvis::MultiFra
       }
 
       // useful later:
-      const kinematics::Transformation T_SC1 = *params.nCameraSystem.T_SC(im1);
+      const kinematics::Transformation T_SC1 = *multiFrame->T_SC(im1);
       const kinematics::Transformation T_WC0 = T_WS * T_SC0;
       const kinematics::Transformation T_WC1 = T_WS * T_SC1;
 
@@ -2158,7 +2159,7 @@ int Frontend::removeOutliers(Estimator &estimator,
   int ctr = 0;
 
   for (size_t im = 0; im < camNumber; im++) {
-    const kinematics::Transformation T_SC = *nCameraSystem.T_SC(im);
+    const kinematics::Transformation T_SC = *currentFrame->T_SC(im);
     const kinematics::Transformation T_WCi = T_WS * T_SC;
     const kinematics::Transformation T_CiW = T_WCi.inverse();
     const size_t kSize = currentFrame->numKeypoints(im);

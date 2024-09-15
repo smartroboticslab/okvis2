@@ -90,6 +90,14 @@ bool ViSlamBackend::addStates(MultiFramePtr multiFrame, const ImuMeasurementDequ
   } else {
     const StateId id = realtimeGraph_.addStatesPropagate(multiFrame->timestamp(), imuMeasurements,
                                                          asKeyframe);
+    // obtain potentially optimised extrinsics
+    for (size_t i = 0; i < multiFrame->numFrames(); ++i) {
+      if (realtimeGraph_.cameraParametersVec_.at(i).online_calibration.do_extrinsics) {
+        const kinematics::Transformation T_SCi = extrinsics(id, i);
+        multiFrame->setExtrinsics(i, T_SCi);
+      }
+    }
+
     multiFrame->setId(id.value());
 
     if(isLoopClosing_ || isLoopClosureAvailable_) {
@@ -752,13 +760,30 @@ void ViSlamBackend::optimiseRealtimeGraph(
     for(const auto & lm : realtimeGraph_.landmarks_) {
       realtimeGraph_.problem_->SetParameterBlockConstant(lm.second.hPoint->parameters());
     }
+
+    // freeze extrinsics
+    for (size_t i = 0; i < realtimeGraph_.cameraParametersVec_.size(); ++i) {
+      if (realtimeGraph_.cameraParametersVec_.at(i).online_calibration.do_extrinsics) {
+        realtimeGraph_.problem_->SetParameterBlockConstant(
+          realtimeGraph_.states_.rbegin()->second.extrinsics.at(i)->parameters());
+      }
+    }
   }
+
 
   realtimeGraph_.options_.linear_solver_type = ::ceres::DENSE_SCHUR;
   realtimeGraph_.optimise(numIter, numThreads, verbose);
 
   // unfreeze if necessary
   if(onlyNewestState) {
+    // unfreeze extrinsics
+    for (size_t i = 0; i < realtimeGraph_.cameraParametersVec_.size(); ++i) {
+      if (realtimeGraph_.cameraParametersVec_.at(i).online_calibration.do_extrinsics) {
+        realtimeGraph_.problem_->SetParameterBlockVariable(
+          realtimeGraph_.states_.rbegin()->second.extrinsics.at(i)->parameters());
+      }
+    }
+
     if(frozen) {
       realtimeGraph_.unfreezePosesFrom(unfreezeId);
       realtimeGraph_.unfreezeSpeedAndBiasesFrom(unfreezeId);

@@ -116,20 +116,25 @@ class NCameraSystem
   /// @return The number of cameras.
   inline size_t numUsedCameras() const;
 
-  /// \brief compute all the overlaps of fields of view. Attention: can be expensive.
+  /// \brief Compute all the overlaps of fields of view. Attention: can be expensive.
   void computeOverlaps();
 
-  /// \brief get the pose of the IMU frame S with respect to the camera cameraIndex
+  /// \brief Get the pose of the IMU frame S with respect to the camera cameraIndex
   /// @param[in] cameraIndex The camera index for which the extrinsics should be returned.
   /// @return T_SC, the extrinsics.
   inline std::shared_ptr<const okvis::kinematics::Transformation> T_SC(size_t cameraIndex) const;
 
-  /// \brief get the camera geometry of camera cameraIndex
+  /// \brief Set the camera extrinsics of camera cameraIndex.
+  /// @param[in] cameraIndex The camera index for which the extrinsics should be set.
+  /// @param[in] T_SCi The new extrinsics.
+  inline void setExtrinsics(size_t cameraIndex, kinematics::Transformation T_SCi);
+
+  /// \brief Get the camera geometry of camera cameraIndex
   /// @param[in] cameraIndex The camera index for which the camera geometry should be returned.
   /// @return The camera geometry.
   inline std::shared_ptr<const cameras::CameraBase> cameraGeometry(size_t cameraIndex) const;
 
-  /// \brief get the distortion type of the camera
+  /// \brief Get the distortion type of the camera
   /// @param[in] cameraIndex The camera index for which the distortion type should be returned.
   /// @return The distortion type
   inline DistortionType distortionType(size_t cameraIndex) const;

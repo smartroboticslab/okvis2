@@ -71,6 +71,7 @@ class ViVisualizer {
     okvis::ObservationVector observations;    ///< Vector containing all the keypoint observations.
     std::shared_ptr<okvis::MultiFrame> currentFrames; ///< Current multiframe.
     okvis::kinematics::Transformation T_WS;  ///< Pose of the current frame
+    AlignedVector<kinematics::Transformation> T_SCi;  ///< Camera extrinsics (may change).
     bool isKeyframe = false; ///< Is it a keyframe?
     bool recognisedPlace = false; ///< is it a place recognition frame?
     TrackingQuality trackingQuality = TrackingQuality::Good; ///< The tracking quality.
