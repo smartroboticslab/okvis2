@@ -631,7 +631,6 @@ bool PinholeCamera<DISTORTION_T>::backProjectBatch(
     std::vector<bool> * success) const
 {
   const int numPoints = imagePoints.cols();
-  directions->row(3) = Eigen::VectorXd::Ones(numPoints);
   for (int i = 0; i < numPoints; ++i) {
     Eigen::Vector2d imagePoint = imagePoints.col(i);
     Eigen::Vector3d point;
