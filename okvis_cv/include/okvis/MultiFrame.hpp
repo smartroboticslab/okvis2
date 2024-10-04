@@ -79,6 +79,11 @@ class MultiFrame
   /// @param[in] timestamp The time this frame was recorded.
   inline void setTimestamp(const okvis::Time & timestamp);
 
+  /// \brief Set the extrinsics.
+  /// @param[in] cameraIdx The camera index that took the image.
+  /// @param[in] T_SCi The extrinsics.
+  inline void setExtrinsics(size_t cameraIdx, const kinematics::Transformation & T_SCi);
+
   /// \brief (Re)set the id
   /// @param[in] id A unique frame Id.
   inline void setId(uint64_t id);

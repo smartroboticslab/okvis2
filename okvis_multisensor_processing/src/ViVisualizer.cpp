@@ -73,7 +73,8 @@ cv::Mat ViVisualizer::drawMatches(VisualizationData::Ptr& data,
                                    size_t image_number) {
 
   const kinematics::Transformation T_WS = data->T_WS;
-  const kinematics::Transformation T_SC = *parameters_.nCameraSystem.T_SC(image_number);
+  const kinematics::Transformation T_SC = data->T_SCi.at(image_number);
+  //const kinematics::Transformation T_SC = *parameters_.nCameraSystem.T_SC(image_number);
   const kinematics::Transformation T_WC = T_WS*T_SC;
   const kinematics::Transformation T_CW = T_WC.inverse();
 

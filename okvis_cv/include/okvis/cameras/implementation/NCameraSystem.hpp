@@ -99,6 +99,14 @@ std::shared_ptr<const okvis::kinematics::Transformation> NCameraSystem::T_SC(
   return T_SC_[cameraIndex];
 }
 
+void NCameraSystem::setExtrinsics(size_t cameraIndex, kinematics::Transformation T_SCi)
+{
+  OKVIS_ASSERT_TRUE_DBG(Exception,
+                        cameraIndex < T_SC_.size(),
+                        "Camera index " << cameraIndex << "out of range.");
+  T_SC_.at(cameraIndex).reset(new kinematics::Transformation(T_SCi));
+}
+
 //get the camera geometry of camera cameraIndex
 std::shared_ptr<const cameras::CameraBase> NCameraSystem::cameraGeometry(
     size_t cameraIndex) const

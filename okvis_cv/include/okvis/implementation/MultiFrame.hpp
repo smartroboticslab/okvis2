@@ -113,6 +113,10 @@ std::shared_ptr<const okvis::kinematics::Transformation> MultiFrame::T_SC(size_t
   return cameraSystem_.T_SC(cameraIdx);
 }
 
+void MultiFrame::setExtrinsics(size_t cameraIdx, const kinematics::Transformation &T_SCi)
+{
+  cameraSystem_.setExtrinsics(cameraIdx, T_SCi);
+}
 
 //////////////////////////////////////////////////////////////
 // The following mirror the Frame functionality.

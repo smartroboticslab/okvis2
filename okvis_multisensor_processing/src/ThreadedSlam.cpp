@@ -750,6 +750,8 @@ void ThreadedSlam::optimisePublishMarginalise(MultiFramePtr multiFrame,
     okvis::ObservationVector::iterator it = visualizationDataPtr
         ->observations.begin();
     for (size_t camIndex = 0; camIndex < numCameras; ++camIndex) {
+      visualizationDataPtr->T_SCi.push_back(
+        estimator_.extrinsics(estimator_.currentStateId(), camIndex));
       for (size_t k = 0; k < multiFrame->numKeypoints(camIndex); ++k) {
         OKVIS_ASSERT_TRUE_DBG(Exception,it != visualizationDataPtr->observations.end(),
                               "Observation-vector not big enough")
