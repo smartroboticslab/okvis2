@@ -117,13 +117,13 @@ struct ImuSensorReadings {
    * @param gyroscopes_ Gyroscope measurement.
    * @param accelerometers_ Accelerometer measurement.
    */
-  ImuSensorReadings(const Eigen::Matrix<double,3,1,Eigen::Unaligned>& gyroscopes_,
-                    const Eigen::Matrix<double,3,1,Eigen::Unaligned>& accelerometers_)
+  ImuSensorReadings(const Eigen::Matrix<double,3,1,Eigen::DontAlign>& gyroscopes_,
+                    const Eigen::Matrix<double,3,1,Eigen::DontAlign>& accelerometers_)
       : gyroscopes(gyroscopes_),
         accelerometers(accelerometers_) {
   }
-  Eigen::Matrix<double,3,1,Eigen::Unaligned> gyroscopes;     ///< Gyroscope measurement.
-  Eigen::Matrix<double,3,1,Eigen::Unaligned> accelerometers; ///< Accelerometer measurement.
+  Eigen::Matrix<double,3,1,Eigen::DontAlign> gyroscopes;     ///< Gyroscope measurement.
+  Eigen::Matrix<double,3,1,Eigen::DontAlign> accelerometers; ///< Accelerometer measurement.
 };
 
 /// \brief Depth camera measurements. For now assume they are synchronized:
