@@ -329,6 +329,9 @@ bool Frontend::verifyRecognisedPlace(const Estimator &estimator,
   // match
   for (auto iter = landmarks.begin(); iter != landmarks.end(); ++iter) {
     for (size_t im = 0; im < params.nCameraSystem.numCameras(); ++im) {
+       if(framesInOut->numKeypoints(im) == 0) {
+        continue;
+      }
       const uchar *ddata = framesInOut->keypointDescriptor(im, 0);
       const size_t K = framesInOut->numKeypoints(im);
       uint32_t distMin = briskMatchingThreshold_;
