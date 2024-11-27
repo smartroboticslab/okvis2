@@ -43,6 +43,7 @@
 
 #include <okvis/TrajectoryOutput.hpp>
 
+
 okvis::TrajectoryOutput::TrajectoryOutput(bool draw) : draw_(draw) {
   if(draw_) {
     _image.create(_imageSize, _imageSize, CV_8UC3);
@@ -302,6 +303,7 @@ void okvis::TrajectoryOutput::drawPathNoncausal()
     isKeyframe.push_back(state.isKeyframe);
 
     // draw covisibilities, too
+
     if (state.isKeyframe) {
       cv::Point2d p0 = convertToImageCoordinates(cv::Point2d(r[0],r[1]));
       for (const auto &id : state.covisibleFrameIds) {
@@ -313,11 +315,11 @@ void okvis::TrajectoryOutput::drawPathNoncausal()
       }
     }
   }
-
-  for (size_t i = 0; i + 1 < path.size(); ) {
+ 
+  for (size_t i = 0, j = 1; j < path.size(); ) {
     cv::Point2d p0 = convertToImageCoordinates(path[i]);
-    cv::Point2d p1 = convertToImageCoordinates(path[i + 1]);
-    if(isKeyframe[i+1]) {
+    cv::Point2d p1 = convertToImageCoordinates(path[j]);
+    if(isKeyframe[j]) {
       cv::circle(_image, p1, 1, cv::Scalar(255, 255, 0), cv::FILLED, cv::LINE_AA);
     }
     if(i==0) {
@@ -325,16 +327,15 @@ void okvis::TrajectoryOutput::drawPathNoncausal()
     }
     cv::Point2d diff = p1-p0;
     if(diff.dot(diff)<2.0){
-      path.erase(path.begin() + i + 1);  // clean short segment
-      heights.erase(heights.begin() + i + 1);
-      isKeyframe.erase(isKeyframe.begin() + i + 1);
+      ++j;
       continue;
     }
-    double rel_height = (heights[i] - _min_z + heights[i + 1] - _min_z)
+    double rel_height = (heights[i] - _min_z + heights[j] - _min_z)
                         * 0.5 / (_max_z - _min_z);
     cv::line(_image, p0, p1, rel_height * cv::Scalar(255, 0, 0)
             + (1.0 - rel_height) * cv::Scalar(0, 0, 255), 1, cv::LINE_AA);
-    i++;
+    i = j;
+    j++;
   }
 }
 
