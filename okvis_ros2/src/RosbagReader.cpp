@@ -47,7 +47,11 @@
 #include <rosbag2_cpp/converter_interfaces/serialization_format_converter.hpp>
 #include <rosbag2_storage/storage_options.hpp>
 #include <image_transport/image_transport.hpp>
+#if __has_include(<cv_bridge/cv_bridge.hpp>) // requires GCC >= 5
 #include <cv_bridge/cv_bridge.hpp>
+#else
+#include <cv_bridge/cv_bridge.h>
+#endif
 #include <sensor_msgs/msg/image.hpp>
 #include <sensor_msgs/msg/imu.hpp>
 #include <rosbag2_storage/storage_options.hpp>
