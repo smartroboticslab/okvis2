@@ -44,7 +44,11 @@
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
 #include <opencv2/core/core.hpp>
+#if __has_include(<cv_bridge/cv_bridge.hpp>) // requires GCC >= 5
 #include <cv_bridge/cv_bridge.hpp>
+#else
+#include <cv_bridge/cv_bridge.h>
+#endif
 #include <image_transport/image_transport.hpp>
 #pragma GCC diagnostic pop
 #include <rclcpp/rclcpp.hpp>
